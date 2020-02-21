@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TrashCollector.Data;
 
 namespace TrashCollector.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200219202112_Dropdown")]
+    partial class Dropdown
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,22 +50,22 @@ namespace TrashCollector.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7ab737aa-1d9b-44c4-b299-e515002526ce",
-                            ConcurrencyStamp = "3eb4529d-c4c5-4dd2-bbf3-9b43513f651d",
+                            Id = "a920405b-b482-4b0b-ac39-521494d5c866",
+                            ConcurrencyStamp = "29474f1d-fb43-494e-b3fe-e4bc8e3b6803",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8ad7f34f-0082-4f4f-98ba-1ae0196227da",
-                            ConcurrencyStamp = "8b380882-649d-4afb-b94c-41efbd4e4544",
+                            Id = "9cc4e988-cc6e-46b6-a5a6-268c0aca885a",
+                            ConcurrencyStamp = "aa413505-2969-4682-90ce-158dea441447",
                             Name = "Employee",
                             NormalizedName = "EMPLOYEE"
                         },
                         new
                         {
-                            Id = "d30f47f5-d205-4bef-a327-e49b548f5314",
-                            ConcurrencyStamp = "5a5ae22a-a165-456e-a2cb-fa25554d6621",
+                            Id = "38db0166-3a2b-47e8-8d25-0051cc049677",
+                            ConcurrencyStamp = "36e83492-e85e-46e0-a6fe-90b9e4d3ad24",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         });
@@ -269,14 +271,14 @@ namespace TrashCollector.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AccountBalance")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("AccountBalance")
+                        .HasColumnType("int");
 
                     b.Property<int>("AddressUserId")
                         .HasColumnType("int");
 
-                    b.Property<string>("EndDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
@@ -287,14 +289,14 @@ namespace TrashCollector.Data.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OneTimePickUp")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("OneTimePickUp")
+                        .HasColumnType("int");
 
                     b.Property<string>("PickupDay")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("StartDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -328,7 +330,7 @@ namespace TrashCollector.Data.Migrations
 
                     b.HasIndex("IdentityUserId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employee");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
