@@ -22,8 +22,8 @@ namespace TrashCollector.Controllers
         // GET: Employees
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Employees.Include(e => e.IdentityUser);
-            return View(await applicationDbContext.ToListAsync());
+            var employee = _context.Employees.Include(e => e.IdentityUser);
+            return View(await employee.ToListAsync());
         }
 
         // GET: Employees/Details/5
@@ -57,7 +57,7 @@ namespace TrashCollector.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,ZipCode,IdentityUserId")] Employee employee)
+        public async Task<IActionResult> Create(Employee employee)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace TrashCollector.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,ZipCode,IdentityUserId")] Employee employee)
+        public async Task<IActionResult> Edit(int id, Employee employee)
         {
             if (id != employee.Id)
             {
