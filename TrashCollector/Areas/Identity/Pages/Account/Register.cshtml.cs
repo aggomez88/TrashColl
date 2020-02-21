@@ -101,7 +101,7 @@ namespace TrashCollector.Areas.Identity.Pages.Account
                     if (Input.Role == "Employee")
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
-                        return RedirectToAction("Create", "Employee");
+                        return RedirectToAction("Create", "Employees");
                     }
 
                     _logger.LogInformation("User created a new account with password.");

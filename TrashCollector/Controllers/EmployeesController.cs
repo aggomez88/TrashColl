@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,22 +19,31 @@ namespace TrashCollector.Controllers
         {
             _context = context;
         }
+        
+
 
         // GET: Employees
         public async Task<IActionResult> Index()
         {
-            var employee = _context.Employees.Include(e => e.IdentityUser);
-            return View(await employee.ToListAsync());
-        }
+            Employee employee = new Employee();
 
+            employee.IdentityUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var employeeInDb = _context.Employees.Where(e=>e.IdentityUserId == employee.IdentityUserId).FirstOrDefault();
+            var Customers = _context.Customer.Where(c => c.Address.ZipCode == employeeInDb.ZipCode).ToList();
+            return View(Customers);
+            
+        }
+        
         // GET: Employees/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();
             }
-
+            
             var employee = await _context.Employees
                 .Include(e => e.IdentityUser)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -48,8 +58,9 @@ namespace TrashCollector.Controllers
         // GET: Employees/Create
         public IActionResult Create()
         {
-            ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            Employee employee = new Employee();
+            
+            return View(employee);
         }
 
         // POST: Employees/Create
@@ -61,9 +72,11 @@ namespace TrashCollector.Controllers
         {
             if (ModelState.IsValid)
             {
+                employee.IdentityUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Customers");
             }
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
             return View(employee);
@@ -102,7 +115,7 @@ namespace TrashCollector.Controllers
             {
                 try
                 {
-                    _context.Update(employee);
+                    _context.SaveChanges();
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
