@@ -20,8 +20,6 @@ namespace TrashCollector.Controllers
             _context = context;
         }
         
-
-
         // GET: Employees
         public async Task<IActionResult> Index()
         {
@@ -32,7 +30,6 @@ namespace TrashCollector.Controllers
             var employeeInDb = _context.Employees.Where(e=>e.IdentityUserId == employee.IdentityUserId).FirstOrDefault();
             var Customers = _context.Customer.Where(c => c.Address.ZipCode == employeeInDb.ZipCode).ToList();
             return View(Customers);
-            
         }
         
         // GET: Employees/Details/5
@@ -104,7 +101,7 @@ namespace TrashCollector.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Employee employee)
+        public async Task<IActionResult> Edit(int id, Employee employee, Customer customer)
         {
             if (id != employee.Id)
             {
@@ -115,6 +112,18 @@ namespace TrashCollector.Controllers
             {
                 try
                 {
+                    employee.IdentityUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                    var employeeInDb = _context.Customer.Where(c => c.Id == employee.Id).Single();
+                    employeeInDb.FirstName = customer.FirstName;
+                    employeeInDb.LastName = customer.LastName;
+                    employeeInDb.PickupDay = customer.PickupDay;
+                    employeeInDb.StartDate = customer.StartDate;
+                    employeeInDb.EndDate = customer.EndDate;
+                    employeeInDb.OneTimePickUp = customer.OneTimePickUp;
+                    employeeInDb.Address = customer.Address;
+                    employeeInDb.AccountBalance = customer.AccountBalance;
+
                     _context.SaveChanges();
                     await _context.SaveChangesAsync();
                 }
@@ -129,7 +138,7 @@ namespace TrashCollector.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Customers");
             }
             ViewData["IdentityUserId"] = new SelectList(_context.Users, "Id", "Id", employee.IdentityUserId);
             return View(employee);
@@ -169,5 +178,41 @@ namespace TrashCollector.Controllers
         {
             return _context.Employees.Any(e => e.Id == id);
         }
+
+        // GET: Employees/Edit/5
+
+        // POST: Employees/Confirm Pickup/5
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmPickup(int id, Customer customer, Employee employee)
+        {
+            Customer customerToUpdate;
+            customerToUpdate = _context.Customer.Find(id);
+            
+            //here
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    //customerToUpdate.FirstName;
+                   
+                        customerToUpdate.AccountBalance += 10;
+                    
+                    //here
+                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return RedirectToAction("Index");
+                }
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        
     }
 }

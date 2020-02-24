@@ -120,6 +120,7 @@ namespace TrashCollector.Controllers
                     customerInDb.EndDate = customer.EndDate;
                     customerInDb.OneTimePickUp = customer.OneTimePickUp;
                     customerInDb.Address = customer.Address;
+                    //customerInDb.AccountBalance = customer.AccountBalance;
 
 
                     _context.SaveChanges();
