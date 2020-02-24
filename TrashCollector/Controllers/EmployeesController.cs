@@ -28,7 +28,8 @@ namespace TrashCollector.Controllers
             employee.IdentityUserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var employeeInDb = _context.Employees.Where(e=>e.IdentityUserId == employee.IdentityUserId).FirstOrDefault();
-            var Customers = _context.Customer.Where(c => c.Address.ZipCode == employeeInDb.ZipCode).ToList();
+            var Customers = _context.Customer.Where(c => c.Address.ZipCode == employeeInDb.ZipCode).OrderBy(x => x.PickupDay).ToList();
+
             return View(Customers);
         }
         
@@ -205,12 +206,12 @@ namespace TrashCollector.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToAction("Employee", "Index");
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Employee", "Index");
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Employee", "Index");
         }
 
         
