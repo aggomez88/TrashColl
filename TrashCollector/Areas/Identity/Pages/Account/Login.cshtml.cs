@@ -82,8 +82,16 @@ namespace TrashCollector.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    //if (true)
+                    //{
+
+                    //}
+                    //_logger.LogInformation("User logged in.");
+                    //return RedirectToAction("Index", "Employees");
+
+                    //var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                     _logger.LogInformation("User logged in.");
-                    return RedirectToAction("Index", "Employees");
+                    return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {
